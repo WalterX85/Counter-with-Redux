@@ -1,8 +1,15 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 
 function Counter() {
-  const count = useSelector(state => state.count)
+
+  const [cartData, setCartData] = useState(0)
+  
+  const {cart, count} = useSelector(state => ({
+    ...state.AddCartReducer,
+    ...state.CounterReducer
+  }))
+
   const dispatch = useDispatch();
 
   const incrFunc = () => {
@@ -17,11 +24,26 @@ function Counter() {
     })
   }
 
+  const addToCartFunc = () => {
+    dispatch({
+      type: "ADDCART",
+      payload: cartData
+    })
+  }
+
   return (
     <div>
-      <h1>Les données : {count}</h1>
+      <h1>Incr/Décr : {count}</h1>
       <button onClick={decrFunc}>-1</button>
       <button onClick={incrFunc}>+1</button>
+      <br />
+      <h1>Ajouter au panier : {cart}</h1>
+      <input
+      value={cartData}
+      onInput={e => setCartData(e.target.value)}
+      type="number"/>
+      <br />
+      <button onClick={addToCartFunc}>Ajouter au panier</button>
     </div>
   )
 }
